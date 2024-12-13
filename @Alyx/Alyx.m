@@ -24,9 +24,9 @@ classdef Alyx
   
   properties
     % URL to the Alyx database
-    BaseURL char = 'https://test.alyx.internationalbrainlab.org'
+    BaseURL char = 'http://172.16.102.30:8000'
     % Set the local directory for saving queued Alyx commands, create if needed
-    QueueDir char = 'C:\localAlyxQueue'
+    QueueDir char = '~/Documents'
     % Set whether input dialogs should appear, e.g. login window
     Headless logical = false
     % A URL of the most-recent subsession created by newExp
@@ -53,13 +53,9 @@ classdef Alyx
   end
   
   methods
-    function obj = Alyx(user, token)
+    function obj = Alyx(user, token, url)
       %ALYX Class constructor
-      
-      % Set the directory and URL paths
-      p = dat.paths;
-      obj.BaseURL = getOr(p, 'databaseURL', obj.BaseURL);
-      obj.QueueDir = getOr(p, 'localAlyxQueue', obj.QueueDir);
+      if nargin > 2 && ~isempty(url); obj.BaseURL = url; end
       
       if nargin
         obj.User = user;
@@ -96,7 +92,7 @@ classdef Alyx
     function obj = set.BaseURL(obj, value)
       % Drop trailing slash and ensure protocol defined
       if isempty(value); obj.BaseURL = ''; return; end % return on empty
-      value = iff(value(1:4)~='http', ['https://' value], value);
+      if matches(value(1:4), 'http'); value = ['https://' value]; end
       obj.BaseURL = iff(value(end)=='/', value(1:end-1), value);
     end
   end

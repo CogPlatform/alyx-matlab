@@ -26,7 +26,7 @@ options.RequestMethod = lower(requestMethod);
 
 try % Post data
   responseBody = webwrite(endpoint, jsonData, options);
-  statusCode = iff(endsWith(endpoint,'auth-token'), 200, 201);
+  if endsWith(endpoint,'auth-token'); statusCode = 200; else  statusCode = 201; end
 catch ex
   responseBody = ex.message;
   switch ex.identifier

@@ -11,7 +11,7 @@
 % instance of an Alyx object that can be passed around rigs and used to get
 % and post data from/to the database.  NB: Alyx is actually a value class,
 % not a handle one.  More on that later.
-doc Alyx
+%doc Alyx
 
 %% Logging in/out
 % To instantiate an instance of Alyx, call the constructor like so:
@@ -22,16 +22,16 @@ ai = Alyx;
 % the first two arguments empty.  This is useful when you want to set a
 % different database URL from the default before logging in.  NB: The
 % inputs are the Username and Token.
-ai = Alyx('','');
+%ai = Alyx('','');
 
 % The default database url is set in dat.paths, a member of the dependent
 % Rigbox +dat package.  
-base = getOr(dat.paths, 'databaseURL')
+%base = 'http://172.16.102.30:8000';
 
 % For playing around you may use the following credentials:
-baseURL = 'https://test.alyx.internationalbrainlab.org';
-user = 'test_user';
-pwd = 'TapetesBloc18';
+%baseURL = 'https://test.alyx.internationalbrainlab.org';
+%usr = 'test_user';
+%pwd = 'TapetesBloc18';
 
 % To log in use the login method.  Upon success, this sets the Token
 % property with a token from Alyx.  To determine whether you're logged in,
@@ -39,7 +39,7 @@ pwd = 'TapetesBloc18';
 % flushes any posts in the queue (more later). NB: Alyx is not a handle
 % class, so make sure you assign the output to itself.
 ai.IsLoggedIn % false
-ai = ai.login;
+ai = ai.login(usr, pwd);
 
 ai.IsLoggedIn % true
 ai = ai.logout;
@@ -63,12 +63,12 @@ subjects = ai.getData('subjects'); % NB: This is called by listSubjects
 % BaseURL property.  To interact with a different database instead, either
 % provide the full URL or change the BaseURL property accordingly.  NB: You
 % may need to refresh your token by logging out and back in.
-ai.BaseURL = 'https://test.dev.alyx.internationalbrainlab.org';
-users = ai.getData('users');
+%ai.BaseURL = 'https://test.dev.alyx.internationalbrainlab.org';
+%users = ai.getData('users');
 
 % The data are returned as a struct.  The second output argument is the
 % server status code.  For a full list of status codes and their meanings:
-doc matlab.net.http.StatusCode
+%doc matlab.net.http.StatusCode
 [users, status] = ai.getData('users') % 200 = OK!
 
 % To use any URL queries, just add them the endpoint string in the standard
@@ -76,7 +76,7 @@ doc matlab.net.http.StatusCode
 sessions = ai.getData('sessions?type=Experiment&subject=ZM_335')
 
 % For more info:
-doc webread
+%doc webread
 
 %%%
 % The query options are set on the server side.  You can find which options
@@ -117,7 +117,7 @@ doc webread
 % Before you can create a session a few things must be set up:
 % # A subject folder must first be created in your main experiment
 % repository:
-subject = 'ZM_335'; % Subject for this test
+subject = subjects(end).nickname; % Subject for this test
 mkdir(fullfile(dat.reposPath('main', 'master'), subject)); % Subject folder
 % # The location of your main repository must be added to Alyx through the
 % admin interface.
@@ -126,7 +126,7 @@ web([ai.BaseURL '/admin/datarepository/']) % Not accessible on test alyx
 rmEmpty({ai.getData('data-repository').hostname}')
 
 % Let's create a session for our subject:
-[expRef, expSeq, url] = ai.newExp('ZM_335');
+[expRef, expSeq, url] = ai.newExp(subject);
 ai.SessionURL = url; % Now holds the current (most recent) subsession URL.
 
 % Let's update the session narrative:
@@ -153,8 +153,8 @@ ai.postData(ai.SessionURL, d, 'patch') % Update the record with PATCH
 
 % The postData method uses the jsonPost method, which in turn uses the
 % built in MATLAB function webwrite.  More info:
-doc Alyx.jsonPost
-doc webwrite
+%doc Alyx.jsonPost
+%doc webwrite
 
 clear d subsession statusCode url comments expSeq
 %% Datasets
