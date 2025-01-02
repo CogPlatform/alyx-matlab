@@ -16,14 +16,8 @@ function [varargout] = iff(cond, evalTrue, evalFalse)
 	
 	% 2013-01 CB created
 	
-	if isa(cond, 'function_handle')
-	  cond = cond();
-	end
-	if cond
-	  result = evalTrue;
-	else
-	  result = evalFalse;
-	end
+	if isa(cond, 'function_handle'); cond = cond(); end
+	if cond; result = evalTrue; else; result = evalFalse; end
 	
 	if isa(result, 'function_handle')
 	  if nargout == 0 || nargout(result) == 0
@@ -35,5 +29,4 @@ function [varargout] = iff(cond, evalTrue, evalFalse)
 	else
 	  varargout = {result};
 	end
-	
-	end
+end
