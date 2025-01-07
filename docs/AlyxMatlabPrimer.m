@@ -73,7 +73,7 @@ subjects = ai.getData('subjects'); % NB: This is called by listSubjects
 
 % To use any URL queries, just add them the endpoint string in the standard
 % URL format:
-sessions = ai.getData('sessions?type=Experiment&subject=ZM_335')
+sessions = ai.getData('sessions?subject=test02')
 
 % For more info:
 %doc webread
@@ -117,13 +117,13 @@ sessions = ai.getData('sessions?type=Experiment&subject=ZM_335')
 % Before you can create a session a few things must be set up:
 % # A subject folder must first be created in your main experiment
 % repository:
-subject = subjects(end).nickname; % Subject for this test
-mkdir(fullfile(dat.reposPath('main', 'master'), subject)); % Subject folder
+subject = subjects(3).nickname; % Subject for this test
+mkdir(fullfile('/home/cog5/OptickaFiles/SavedData', subject)); % Subject folder
 % # The location of your main repository must be added to Alyx through the
 % admin interface.
-web([ai.BaseURL '/admin/datarepository/']) % Not accessible on test alyx
+web([ai.BaseURL '/admin/data/datarepository/']) % Not accessible on test alyx
 % The hostname field must match the root of the file path:
-rmEmpty({ai.getData('data-repository').hostname}')
+alyxManager.rmEmpty({ai.getData('data-repository').hostname}')
 
 % Let's create a session for our subject:
 [expRef, expSeq, url] = ai.newExp(subject);
